@@ -1,0 +1,6 @@
+@PermillityTest_HostAddress = http://localhost:5268
+
+GET {{PermillityTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
