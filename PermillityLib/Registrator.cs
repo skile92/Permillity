@@ -28,15 +28,17 @@ namespace Permillity
             }
 
             services.AddSingleton(options);
-            services.AddTransient<IPerformanceTracker, PerformanceTracker>();
-            services.AddTransient<IPermillityService, PermillityService>();
+            services.AddSingleton<Coordinator>();
+            services.AddSingleton<LocalStorage>();
+            services.AddScoped<IPerformanceTracker, PerformanceTracker>();
+            services.AddScoped<IPermillityService, PermillityService>();
 
             if (options.UseInMemory)
                 services.AddSingleton<IRepository, InMemoryRepository>();
             else if (options.UseMySql)
-                services.AddTransient<IRepository, MySqlRepository>();
+                services.AddScoped<IRepository, MySqlRepository>();
             else
-                services.AddTransient<IRepository, SqlServerRepository>();
+                services.AddScoped<IRepository, SqlServerRepository>();
 
             return services;
         }

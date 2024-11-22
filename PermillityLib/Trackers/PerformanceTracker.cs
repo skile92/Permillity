@@ -4,30 +4,27 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Permillity.Trackers
 {
     internal class PerformanceTracker : IPerformanceTracker
     {
-        private readonly List<CustomRequest> _requests;
+        private readonly LocalStorage _storage;
         private readonly IRepository _repository;
         private readonly ILogger<PerformanceTracker> _logger;
-        private readonly SemaphoreSlim _semaphore;
+        private readonly Coordinator _coordinator;
         private readonly int _batchSize;
         private readonly bool _useLogger;
-        private readonly Guid _instance;
 
-        public PerformanceTracker(IRepository repository, PermillityOptions options, ILogger<PerformanceTracker> logger)
+        public PerformanceTracker(IRepository repository, PermillityOptions options, ILogger<PerformanceTracker> logger, Coordinator coordinator, LocalStorage storage)
         {
-            _requests = new List<CustomRequest>();
+            _storage = storage;
             _repository = repository;
             _logger = logger;
             _batchSize = options.DatabaseBatchSize;
             _useLogger = options.UseLogger;
-            _semaphore = new SemaphoreSlim(1, 1);
-            _instance = Guid.NewGuid();
+            _coordinator = coordinator;
         }
 
         public async Task ProcessAsync(string method, string path, string query, string body, decimal time, bool isSuccess)
@@ -46,18 +43,18 @@ namespace Permillity.Trackers
                 QueryString = query,
                 IsSuccess = isSuccess
             };
-            _requests.Add(performance);
+            _storage.Requests.Add(performance);
 
-            if (_requests.Count < _batchSize)
+            if (_storage.Requests.Count < _batchSize)
                 return;
 
-            await _semaphore.WaitAsync();
+            await _coordinator.Semaphore.WaitAsync();
 
             try
             {
                 await WriteToRepository();
 
-                _requests.Clear();
+                _storage.Clear();
             }
             catch (Exception ex)
             {
@@ -66,17 +63,17 @@ namespace Permillity.Trackers
             }
             finally
             {
-                _semaphore.Release();
+                _coordinator.Semaphore.Release();
             }
         }
 
         private async Task WriteToRepository()
         {
-            var groupedRequests = _requests
+            var groupedRequests = _storage.Requests
                 .GroupBy(x => new { x.Year, x.Week, x.Path, x.Method, x.IsSuccess })
                 .Select(x => new ApiStats
                 {
-                    Instance = _instance,
+                    Instance = _coordinator.Instance,
                     IsSuccess = x.Key.IsSuccess,
                     RequestYear = x.Key.Year,
                     RequestWeek = x.Key.Week,
@@ -90,12 +87,12 @@ namespace Permillity.Trackers
                 })
                 .ToList();
 
-            var weeks = _requests.Select(x => x.Week).Distinct().ToList();
-            var years = _requests.Select(x => x.Year).Distinct().ToList();
-            var methods = _requests.Select(x => x.Method).Distinct().ToList();
-            var paths = _requests.Select(x => x.Path).Distinct().ToList();
+            var weeks = _storage.Requests.Select(x => x.Week).Distinct().ToList();
+            var years = _storage.Requests.Select(x => x.Year).Distinct().ToList();
+            var methods = _storage.Requests.Select(x => x.Method).Distinct().ToList();
+            var paths = _storage.Requests.Select(x => x.Path).Distinct().ToList();
 
-            var repoStatistics = await _repository.GetAsync(_instance, years, weeks, methods, paths);
+            var repoStatistics = await _repository.GetAsync(_coordinator.Instance, years, weeks, methods, paths);
 
             var itemsToAdd = new List<ApiStats>();
             var itemsToUpdate = new List<ApiStats>();

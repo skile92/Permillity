@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using PermillityLib;
+using Permillity;
 using PermillityTest.Persistence;
 using PermillityTest.Services;
 
@@ -22,7 +21,7 @@ builder.Services.AddLogging();
 builder.Services.AddPermillity(x =>
 {
     x.UseInMemory();
-    x.SetBatchSize(0);
+    x.SetBatchSize(10);
 });
 
 var app = builder.Build();

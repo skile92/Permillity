@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PermillityLib.Dashboard;
+using Permillity.Dashboard;
 
 namespace PermillityTest.Controllers;
 

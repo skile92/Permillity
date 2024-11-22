@@ -12,15 +12,25 @@ namespace Permillity.Dashboard
     internal class PermillityService : IPermillityService
     {
         private readonly IRepository _repository;
+        private readonly LocalStorage _storage;
+        private readonly Coordinator _coordinator;
 
-        public PermillityService(IRepository repository)
+        public PermillityService(IRepository repository, LocalStorage storage, Coordinator coordinator)
         {
             _repository = repository;
+            _storage = storage;
+            _coordinator = coordinator;
         }
 
         public async Task<List<ApiStats>> GetStatisticsDataAsync()
         {
             var data = await _repository.GetAsync();
+
+            //add unsynced data to dash
+            var localRequests = _storage.Requests.ToList();
+            var localApiStats = ConvertToApiStats(localRequests);
+
+            data.AddRange(localApiStats);
 
             return data;
         }
@@ -30,6 +40,12 @@ namespace Permillity.Dashboard
             var week = CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday);
 
             var apiStats = await _repository.GetAsync();
+
+            //add unsynced data to dash
+            var localRequests = _storage.Requests.ToList();
+            var localApiStats = ConvertToApiStats(localRequests);
+
+            apiStats.AddRange(localApiStats);
 
             var data = ConvertToDashStats(apiStats, week);
 
@@ -93,6 +109,27 @@ namespace Permillity.Dashboard
             }
 
             return data;
+        }
+
+        private List<ApiStats> ConvertToApiStats(List<CustomRequest> requests)
+        {
+            return _storage.Requests
+                .GroupBy(x => new { x.Year, x.Week, x.Path, x.Method, x.IsSuccess })
+                .Select(x => new ApiStats
+                {
+                    Instance = _coordinator.Instance,
+                    IsSuccess = x.Key.IsSuccess,
+                    RequestYear = x.Key.Year,
+                    RequestWeek = x.Key.Week,
+                    RequestPath = x.Key.Path,
+                    RequestMethod = x.Key.Method,
+                    RequestCount = x.Count(),
+                    AverageTime = x.Average(y => y.ExecutionTime),
+                    MaximumTime = x.Max(y => y.ExecutionTime),
+                    ExampleQueryString = x.OrderByDescending(y => y.ExecutionTime)?.FirstOrDefault()?.QueryString,
+                    ExampleBody = x.OrderByDescending(y => y.ExecutionTime)?.FirstOrDefault()?.Body
+                })
+                .ToList();
         }
     }
 }

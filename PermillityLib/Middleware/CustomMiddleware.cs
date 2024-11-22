@@ -11,18 +11,16 @@ namespace Permillity.Middleware
         private readonly RequestDelegate _next;
 
         private readonly Stopwatch _stopwatch;
-        private readonly IPerformanceTracker _apiPerformanceService;
         private readonly string[] _ignoreEndpoints;
 
-        public CustomMiddleware(RequestDelegate next, IPerformanceTracker apiPerformanceService, PermillityOptions options)
+        public CustomMiddleware(RequestDelegate next, PermillityOptions options)
         {
             _next = next;
-            _apiPerformanceService = apiPerformanceService;
             _ignoreEndpoints = options.IgnoreEndpoints;
             _stopwatch = new Stopwatch();
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IPerformanceTracker _apiPerformanceService)
         {
             var avoidAttribute = Utils.GetAvoidAttribute(context);
             var path = Utils.GetPathTemplate(context);

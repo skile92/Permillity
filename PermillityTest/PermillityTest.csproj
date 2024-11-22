@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PermillityLib\PermillityLib.csproj" />
+    <ProjectReference Include="..\PermillityLib\Permillity.csproj" />
   </ItemGroup>
 
 </Project>
