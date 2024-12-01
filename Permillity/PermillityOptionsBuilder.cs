@@ -5,6 +5,7 @@
         private int _databaseBatchSize = 50;
         private bool _useInMemory = true;
         private bool _useMySql = false;
+        private bool _useSqlite = false;
         private string _connectionString = null;
         private bool _useLogger = false;
         private string[] _ignoreEndpoints = new string[0];
@@ -18,6 +19,7 @@
         {
             _useInMemory = useInMemory;
             _useMySql = false;
+            _useSqlite = false;
 
             return this;
         }
@@ -31,6 +33,7 @@
         {
             _useInMemory = false;
             _useMySql = false;
+            _useSqlite = false;
 
             _connectionString = connectionString;
 
@@ -46,6 +49,22 @@
         {
             _useInMemory = false;
             _useMySql = true;
+            _useSqlite= false;
+            _connectionString = connectionString;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Directs permillity to use sqlite database.
+        /// </summary>
+        /// <param name="connectionString">Connection string to sqlite database.</param>
+        /// <returns>Options builder</returns>
+        public PermillityOptionsBuilder UseSqlite(string connectionString)
+        {
+            _useInMemory = false;
+            _useMySql = false;
+            _useSqlite = true;
             _connectionString = connectionString;
 
             return this;
@@ -97,6 +116,7 @@
             return new PermillityOptions(
                 _useInMemory,
                 _useMySql,
+                _useSqlite,
                 _connectionString,
                 _databaseBatchSize,
                 _useLogger,

@@ -37,6 +37,8 @@ namespace Permillity
                 services.AddSingleton<IRepository, InMemoryRepository>();
             else if (options.UseMySql)
                 services.AddScoped<IRepository, MySqlRepository>();
+            else if (options.UseSqlite)
+                services.AddScoped<IRepository, SqliteRepository>();
             else
                 services.AddScoped<IRepository, SqlServerRepository>();
 

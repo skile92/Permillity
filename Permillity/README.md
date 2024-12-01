@@ -1,6 +1,6 @@
 # Permillity
 
-Permillity is a lightweight endpoint performance tracker designed to monitor each request in your application. It is simple to integrate, making it ideal for small to medium-sized projects or applications. With support for in-memory, SQL Server, and MySQL backends, Permillity helps you gain insights into your application's performance effortlessly.
+Permillity is a lightweight endpoint performance tracker designed to monitor each request in your application. It is simple to integrate, making it ideal for small to medium-sized projects or applications. With support for in-memory, SQL Server, MySQL and SQLite backends, Permillity helps you gain insights into your application's performance effortlessly.
 
 ## Overview
 
@@ -8,7 +8,7 @@ Permillity tracks and logs requests in your application, offering a dashboard fo
 
 ### Key Features:
 - **Lightweight**: Optimized for small and medium-sized projects.
-- **Database Options**: Supports in-memory, SQL Server, and MySQL.
+- **Database Options**: Supports in-memory, SQL Server, MySQL and SQLite.
 - **Customizable**: Includes options to ignore specific endpoints or batch process data.
 - **Dashboard and Data**: View a pre-built dashboard or access raw performance data.
 
@@ -41,6 +41,7 @@ You can customize Permillity during servise registration. AddPermillity() method
 - **UseInMemory()**: Permillity will use in-memory storage. This option is default.
 - **UseSqlServer(conString)**: Permillity will use ms sql server as a storage. Requires connection string as a parameter.
 - **UseMySql(conString)**: Permillity will use my sql as a storage. Requires connection string as a parameter.
+- **UseSqlite(conString)**: Permillity will use sqlite as a storage. Requires connection string as a parameter.
 - **UseLogger()**: Permillity will use logger if available to log errors. Default is false.
 - **SetBatchSize(50)**: Permillity will sync data with storage each N requests. Default is 50. For real-time sync use 0.
 - **SetIgnoreEndpoints(["WeatherForecast"])**: Permillity will ignore listed endpoints.
@@ -96,4 +97,4 @@ public async Task<IActionResult> GetStatistics([FromServices] IPermillityService
 
 ## Technical info
 
-When using sql server or mysql databases Permillity will create one table for tracking data: ApiStats. Statistics are kept by endpoint by week and year. If you want to clear statistics when it become burdensome just delete data from the table. There is possibility that some request will not be logged (for example, if app crashes or is shut down before current batch is synced with database.) Statistics numbers should be used as reference only. 
+When using sql server, mysql or sqlite databases Permillity will create one table for tracking data: ApiStats. Statistics are kept by endpoint by week and year. If you want to clear statistics when it become burdensome just delete data from the table. There is possibility that some request will not be logged (for example, if app crashes or is shut down before current batch is synced with database.) Statistics numbers should be used as reference only. 

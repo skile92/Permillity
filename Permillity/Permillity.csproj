@@ -4,14 +4,13 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     
 	<PackageId>Permillity</PackageId>
-	<Version>1.0.1</Version>
+	<Version>1.0.2</Version>
 	<Authors>Miljan Skipina</Authors>
 	<Description>A ligthweight library for tracking endpoint performances with built-in dashboard.</Description>
 	<Title>Permillity</Title>
 	<PackageIcon>logo.png</PackageIcon>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageReleaseNotes>Fixed object lifecycles
-Dashboard now always return up-to-date statistics</PackageReleaseNotes>
+	<PackageReleaseNotes>Added sqlite support</PackageReleaseNotes>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageTags>Permillity;AspNet;NetCore;SqlServer;MySql;Lightweight;Tracker;Performance</PackageTags>
   </PropertyGroup>
@@ -23,6 +22,7 @@ Dashboard now always return up-to-date statistics</PackageReleaseNotes>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing" Version="2.2.2" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
