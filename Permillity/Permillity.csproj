@@ -4,13 +4,14 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     
 	<PackageId>Permillity</PackageId>
-	<Version>1.0.0</Version>
+	<Version>1.0.1</Version>
 	<Authors>Miljan Skipina</Authors>
 	<Description>A ligthweight library for tracking endpoint performances with built-in dashboard.</Description>
 	<Title>Permillity</Title>
 	<PackageIcon>logo.png</PackageIcon>
 	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<PackageReleaseNotes>Inital version</PackageReleaseNotes>
+	<PackageReleaseNotes>Fixed object lifecycles
+Dashboard now always return up-to-date statistics</PackageReleaseNotes>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	<PackageTags>Permillity;AspNet;NetCore;SqlServer;MySql;Lightweight;Tracker;Performance</PackageTags>
   </PropertyGroup>

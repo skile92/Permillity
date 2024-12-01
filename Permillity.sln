@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Permillity", "PermillityLib\Permillity.csproj", "{490B0BBD-3C50-4603-8C28-69B8048F9A9D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PermillityTest", "PermillityTest\PermillityTest.csproj", "{DE2962A4-6B7E-4550-B0FE-63EDDDCC6205}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Permillity", "Permillity\Permillity.csproj", "{490B0BBD-3C50-4603-8C28-69B8048F9A9D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
